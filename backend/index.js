@@ -6,6 +6,8 @@ const cookieParser=require('cookie-parser');
 const registerRoutes=require('./routes/register');
 const LoginRoute=require('./routes/login');
 const app=express();
+const dotenv=require('dotenv');
+dotenv.config();
 app.use(cors({
     origin:"http://localhost:5173",
     credentials:true

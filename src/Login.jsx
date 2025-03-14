@@ -21,7 +21,7 @@ export default function Login() {
         dispatch(
           login({
             uid: currentUser.uid,
-            email: currentUser.displayName,
+            name: currentUser.displayName,
             email: currentUser.email,
             photo: currentUser.photoURL,
           })
@@ -31,7 +31,7 @@ export default function Login() {
           credentials: "include",
           headers: { "Content-type": "application/json" },
           body: JSON.stringify({
-            email: currentUser.displayName,
+            name: currentUser.displayName,
             email: currentUser.email,
             photo_url: currentUser.photoURL,
           }),
