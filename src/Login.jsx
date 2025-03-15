@@ -48,7 +48,7 @@ export default function Login() {
   useEffect(() => {
     if (user) {
       console.log(user);
-      window.location.assign("/page");
+      window.location.assign("/");
     }
   }, [user]);
 

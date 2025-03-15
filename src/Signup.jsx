@@ -44,7 +44,7 @@ export default function Signup() {
   useEffect(()=>{
        if(user){
         console.log(user);
-        window.location.assign("/page");
+        window.location.assign("/");
        }
   },[user])
 const provider = new GoogleAuthProvider();
