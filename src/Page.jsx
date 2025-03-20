@@ -74,6 +74,7 @@ const [remotePeerId,setRemoteId]=useState("");
                         };
                     } else {
                         console.warn(" Remote video stream already set!");
+                        remoteVideo.play();
                     }
                     console.log("Remote stream set successfully.");
                     const localStream=await navigator.mediaDevices.getUserMedia({
