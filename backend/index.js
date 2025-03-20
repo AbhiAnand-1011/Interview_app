@@ -11,14 +11,14 @@ const server=require('http').createServer(app);
 
 const io=require('socket.io')(server,{
     cors:{
-        origin:"http://localhost:5173",
+        origin:["https://interview-webapp.onrender.com","http://localhost:5173"],
         methods:["GET","POST"]
     }
 });
 const dotenv=require('dotenv');
 dotenv.config();
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:["https://interview-webapp.onrender.com","http://localhost:5173"],
     credentials:true,
     methods:["GET","POST"]
 }));
