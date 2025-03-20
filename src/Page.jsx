@@ -65,8 +65,16 @@ const [remotePeerId,setRemoteId]=useState("");
                 const remoteVideo = document.getElementById("remote");
                 
                 if (event.streams.length > 0) {
-                    remoteVideo.srcObject = event.streams[0]; // Set remote stream
-                    remoteVideo.play();
+                    if (!remoteVideo.srcObject) {  
+                        remoteVideo.srcObject = event.streams[0];
+                
+                        remoteVideo.onloadedmetadata = () => {
+                            console.log(" Metadata loaded, playing...");
+                            remoteVideo.play().catch((err) => console.warn(" Play failed:", err));
+                        };
+                    } else {
+                        console.warn(" Remote video stream already set!");
+                    }
                     console.log("Remote stream set successfully.");
                     const localStream=await navigator.mediaDevices.getUserMedia({
                         video:true,
