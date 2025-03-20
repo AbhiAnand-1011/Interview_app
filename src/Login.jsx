@@ -26,7 +26,7 @@ export default function Login() {
             photo: currentUser.photoURL,
           })
         );
-        fetch("http://localhost:8080/auth/firebase", {
+        fetch("https://interview-app-7w2o.onrender.com/auth/firebase", {
           method: "POST",
           credentials: "include",
           headers: { "Content-type": "application/json" },
@@ -72,7 +72,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      fetch("http://localhost:8080/login", {
+      fetch("https://interview-app-7w2o.onrender.com/login", {
         method: "POST",
         credentials: "include",
         headers: { "Content-type": "application/json" },

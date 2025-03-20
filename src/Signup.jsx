@@ -22,7 +22,7 @@ export default function Signup() {
           email: currentUser.email,
           photo: currentUser.photoURL
         }));
-        fetch('http://localhost:8080/auth/firebase',
+        fetch('https://interview-app-7w2o.onrender.com/auth/firebase',
           {
             method:"POST",
             credentials:"include",
@@ -69,7 +69,7 @@ const signInWithGoogle = async () => {
     e.preventDefault();
    
     if (validate()) {
-      fetch('http://localhost:8080/auth/local',
+      fetch('https://interview-app-7w2o.onrender.com/auth/local',
         {
         method:"POST",
         credentials:"include",
