@@ -12,7 +12,8 @@ const server=require('http').createServer(app);
 const io=require('socket.io')(server,{
     cors:{
         origin:["https://interview-webapp.netlify.app","http://localhost:5173"],
-        methods:["GET","POST"]
+        methods:["GET","POST"],
+        credentials:true
     }
 });
 const dotenv=require('dotenv');
