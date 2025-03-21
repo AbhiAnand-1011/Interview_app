@@ -84,6 +84,9 @@ const [remotePeerId,setRemoteId]=useState("");
                         remoteVideo.load();
                         remoteVideo.srcObject=event.streams[0];
                         const videoTrack = remoteVideo.srcObject.getVideoTracks()[0];
+                        console.log("video track",videoTrack);
+                        videoTrack.enabled = true; 
+                            videoTrack.muted = false; 
                         if (videoTrack) {
                             videoTrack.enabled = true; 
                             videoTrack.muted = false; 
