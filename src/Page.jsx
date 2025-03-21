@@ -150,7 +150,9 @@ peer.addEventListener("track", async (event) => {
             }
             await peer.setRemoteDescription(new RTCSessionDescription(data.answer)).then(
                 ()=>{
+                    console.log(peer.remoteDescription);
                     if(peer.remoteDescription){
+                    
                         icecandidates.map( async(candidate)=>{
                             await peer.addIceCandidate(new RTCIceCandidate(candidate));
                             console.log("ice candidate added succesfully")
