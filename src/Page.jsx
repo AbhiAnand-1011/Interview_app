@@ -109,6 +109,11 @@ const getUserMedia=useCallback(async()=>{
 
          window.location.assign("/Signup");
     }
+    const sendStream=useCallback(()=>{
+        for(const track of localStream.getTracks()){
+            peer.peer.addTrack(track,localStream);
+           }
+    },[localStream]);
      return(
         <>
          <div>
@@ -118,6 +123,7 @@ const getUserMedia=useCallback(async()=>{
                 <button onClick={logOut}>log out</button>
                 
             </div>
+            {localStream && <button onClick={sendStream}>send Stream</button>}
             {  remoteStream && <ReactPlayer playing muted height="250px" width="250px" url={remoteStream}></ReactPlayer>}
          {  localStream && <ReactPlayer playing muted height="250px" width="250px" url={localStream}></ReactPlayer>}
             <button onClick={createCall}>Create a meet</button>
