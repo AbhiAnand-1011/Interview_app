@@ -152,7 +152,18 @@ const [remotePeerId,setRemoteId]=useState("");
 
     const offer = await peer.createOffer();
     await peer.setLocalDescription(offer); 
-
+    await new Promise((resolve) => {
+        if (peer.iceGatheringState === "complete") {
+            resolve();
+        } else {
+            peer.addEventListener("icegatheringstatechange", () => {
+                if (peer.iceGatheringState === "complete") {
+                    console.log("ICE gathering complete!");
+                    resolve();
+                }
+            });
+        }
+    });
     console.log("Offer set as local description, signaling state:", peer.signalingState); 
 
         socket.emit('outgoing:call', { offer: offer, to: to });
