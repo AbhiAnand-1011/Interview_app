@@ -40,12 +40,12 @@ io.on("connection",(socket)=>{
         console.log("answer sent");
         console.log(data.answer);
     })
-    socket.on("ice-candidate", (data) => {
-       
-            console.log("successfulu sent ice candidate to",data.to);
-            socket.to(data.to).emit("ice-candidate", {candidate: data.candidate });
-        
-    });
+    socket.on("negotiation",(data)=>{
+        socket.to(data.to).emit("negotiation",{from:socket.id,offer:data.offer});
+    })
+    socket.on("nego-done",(data)=>{
+        socket.to(data.to).emit("nego-final",{from:socket.id,offer:data.answer});
+    })
     socket.on("disconnect",()=>{
         
         users=users.filter((id)=>{
