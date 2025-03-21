@@ -48,7 +48,6 @@ const [remotePeerId,setRemoteId]=useState("");
             setId(id);
          });
          socket.on("users",(data)=>{
-            console.log(data);
            setActive_users(data);
          })
          socket.on("incomingOffer",async(data)=>{
@@ -63,11 +62,17 @@ const [remotePeerId,setRemoteId]=useState("");
                 console.log("Track event received. Adding remote stream.");
                 
                 const remoteVideo = document.getElementById("remote");
-                
+                console.log(event.streams[0]);
                 if (event.streams.length > 0) {
+                   
                     if (!remoteVideo.srcObject) {  
                         remoteVideo.srcObject = event.streams[0];
-                
+                        const videoTrack = remoteVideo.srcObject.getVideoTracks()[0];
+                        if (videoTrack) {
+                            videoTrack.enabled = true; 
+                            videoTrack.muted = false; 
+                            console.log("Video track forced unmute:", videoTrack);
+                        }
                         remoteVideo.onloadedmetadata = () => {
                             console.log(" Metadata loaded, playing...");
                             remoteVideo.play().catch((err) => console.warn(" Play failed:", err));
@@ -78,9 +83,15 @@ const [remotePeerId,setRemoteId]=useState("");
                         remoteVideo.removeAttribute('src');
                         remoteVideo.load();
                         remoteVideo.srcObject=event.streams[0];
+                        const videoTrack = remoteVideo.srcObject.getVideoTracks()[0];
+                        if (videoTrack) {
+                            videoTrack.enabled = true; 
+                            videoTrack.muted = false; 
+                            console.log("Video track forced unmute:", videoTrack);
+                        }
                         remoteVideo.play().catch((err)=>{console.log("play failed again",err)});
                     }
-                    console.log("Remote stream set successfully.");
+                  
                     const localStream=await navigator.mediaDevices.getUserMedia({
                         video:true,
                         audio:true
