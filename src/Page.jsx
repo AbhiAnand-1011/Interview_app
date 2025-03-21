@@ -27,7 +27,12 @@ const [iceCandidatesToSend,setOutgoingCandidates]=useState([]);
         if (event.candidate) {
             
             console.log(remotePeerId);
+            if(!remotePeerId){
             setOutgoingCandidates([...iceCandidatesToSend,event.candidate]);
+            }
+        else{
+            socket.emit("ice-candidate", { candidate:event.candidate, to: remotePeerId });
+        }
         }
     })
     peer.addEventListener("iceconnectionstatechange", () => {

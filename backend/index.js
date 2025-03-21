@@ -42,7 +42,7 @@ io.on("connection",(socket)=>{
     })
     socket.on("ice-candidate", (data) => {
        
-    
+            console.log("successfulu sent ice candidate to",data.to);
             socket.to(data.to).emit("ice-candidate", {candidate: data.candidate });
         
     });
