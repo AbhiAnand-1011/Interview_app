@@ -25,13 +25,15 @@ app.use(cors({
 }));
 let users=[];
 io.on("connection",(socket)=>{
-    console.log("user connect hua hai ");
+   
     console.log(socket.id);
     users.push(socket.id);
     socket.emit("client_id",socket.id);
     socket.broadcast.emit("users",users);
     socket.on("outgoing:call",(data)=>{
+          
         socket.to(data.to).emit("incomingOffer",{from:socket.id,offer:data.offer})
+        console.log("offer sent")
     });
     socket.on("accepted",(data)=>{
         socket.to(data.to).emit("incomingAnswer",{answer:data.answer});
@@ -45,7 +47,7 @@ io.on("connection",(socket)=>{
         
     });
     socket.on("disconnect",()=>{
-        console.log("user disconnect hua hai:",socket.id);
+        
         users=users.filter((id)=>{
                id!=socket.id;
                
