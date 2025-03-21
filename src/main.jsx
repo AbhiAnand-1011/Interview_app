@@ -8,15 +8,18 @@ import Page from './Page.jsx';
 import { PersistGate } from "redux-persist/integration/react";
 
 import './index.css';
+import { SocketProvider } from './socket/SocketProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
     <Router>
       <Routes>
+        <SocketProvider>
         <Route path="/Signup" element={<Signup />} /> 
         <Route path="/" element={<Page />} /> 
         <Route path="/login" element={<Login />}/>
+        </SocketProvider>
       </Routes>
     </Router>
     </PersistGate>

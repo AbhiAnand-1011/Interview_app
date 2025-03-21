@@ -4,8 +4,9 @@ import { useDispatch } from "react-redux";
 import { logout } from "./ReduxStore";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
-import socket from "./socket/socket";
+
 import './Page.css';
+import { useSocket } from "./socket/SocketProvider";
 const peer = new RTCPeerConnection({
     iceServers: [
         { urls: "stun:stun.l.google.com:19302" }, 
@@ -23,6 +24,7 @@ const [onCall,setOnCall]=useState(false);
 const [remotePeerId,setRemoteId]=useState("");
 const [icecandidates,setIceCandidates]=useState([]);
 const [iceCandidatesToSend,setOutgoingCandidates]=useState([]);
+const socket=useSocket();
 peer.addEventListener("track", async (event) => {
     
     console.log("Track event received. Adding remote stream.");
