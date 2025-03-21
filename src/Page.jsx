@@ -32,7 +32,7 @@ const handleOffer=useCallback(async ({from,offer})=>{
   for(const track of localStream.getTracks()){
     peer.peer.addTrack(track,localStream);
    }
-},[])
+},[localStream]);
 const handleAnswer=useCallback(async ({answer})=>{
    await peer.setRemoteDescription(answer);
    for(const track of localStream.getTracks()){
