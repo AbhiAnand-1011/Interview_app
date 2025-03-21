@@ -212,6 +212,7 @@ const [icecandidates,setIceCandidates]=useState([]);
 }
 const joinMeet=async()=>{
     const callId=window.prompt("Enter the meeting id");
+    setRemoteId(callId);
     await createCall(callId);
 }
     const getUserMedia=async()=>{
