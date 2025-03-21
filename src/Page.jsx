@@ -23,6 +23,55 @@ const [onCall,setOnCall]=useState(false);
 const [remotePeerId,setRemoteId]=useState("");
 const [icecandidates,setIceCandidates]=useState([]);
 const [iceCandidatesToSend,setOutgoingCandidates]=useState([]);
+peer.addEventListener("track", async (event) => {
+    
+    console.log("Track event received. Adding remote stream.");
+    
+    const remoteVideo = document.getElementById("remote");
+    console.log(event.streams[0]);
+    if (event.streams.length > 0) {
+       
+        if (!remoteVideo.srcObject) {  
+            remoteVideo.srcObject = event.streams[0];
+            const videoTrack = remoteVideo.srcObject.getVideoTracks()[0];
+            if (videoTrack) {
+                videoTrack.enabled = true; 
+                videoTrack.muted = false; 
+                console.log("Video track forced unmute:", videoTrack);
+            }
+            remoteVideo.onloadedmetadata = () => {
+                console.log(" Metadata loaded, playing...");
+                remoteVideo.play().catch((err) => console.warn(" Play failed:", err));
+            };
+        } else {
+            console.warn(" Remote video stream already set!");
+            remoteVideo.pause();
+            remoteVideo.removeAttribute('src');
+            remoteVideo.load();
+            remoteVideo.srcObject=event.streams[0];
+            const videoTrack = remoteVideo.srcObject.getVideoTracks()[0];
+            console.log("video track",videoTrack);
+            videoTrack.enabled = true; 
+                videoTrack.muted = false; 
+            if (videoTrack) {
+                videoTrack.enabled = true; 
+                videoTrack.muted = false; 
+                console.log("Video track forced unmute:", videoTrack);
+            }
+            remoteVideo.play().catch((err)=>{console.log("play failed again",err)});
+        }
+      
+        const localStream=await navigator.mediaDevices.getUserMedia({
+            video:true,
+            audio:true
+        })
+        for(const track of localStream.getTracks()){
+            peer.addTrack(track,localStream);
+        }
+    } else {
+        console.warn("No stream found in track event.");
+    }
+});
     peer.addEventListener("icecandidate",(event)=>{
         if (event.candidate) {
             
@@ -70,68 +119,23 @@ const [iceCandidatesToSend,setOutgoingCandidates]=useState([]);
                 console.warn("Invalid state:", peer.signalingState);
                 return;
             }
-            peer.addEventListener("track", async (event) => {
-    
-                console.log("Track event received. Adding remote stream.");
-                
-                const remoteVideo = document.getElementById("remote");
-                console.log(event.streams[0]);
-                if (event.streams.length > 0) {
-                   
-                    if (!remoteVideo.srcObject) {  
-                        remoteVideo.srcObject = event.streams[0];
-                        const videoTrack = remoteVideo.srcObject.getVideoTracks()[0];
-                        if (videoTrack) {
-                            videoTrack.enabled = true; 
-                            videoTrack.muted = false; 
-                            console.log("Video track forced unmute:", videoTrack);
-                        }
-                        remoteVideo.onloadedmetadata = () => {
-                            console.log(" Metadata loaded, playing...");
-                            remoteVideo.play().catch((err) => console.warn(" Play failed:", err));
-                        };
-                    } else {
-                        console.warn(" Remote video stream already set!");
-                        remoteVideo.pause();
-                        remoteVideo.removeAttribute('src');
-                        remoteVideo.load();
-                        remoteVideo.srcObject=event.streams[0];
-                        const videoTrack = remoteVideo.srcObject.getVideoTracks()[0];
-                        console.log("video track",videoTrack);
-                        videoTrack.enabled = true; 
-                            videoTrack.muted = false; 
-                        if (videoTrack) {
-                            videoTrack.enabled = true; 
-                            videoTrack.muted = false; 
-                            console.log("Video track forced unmute:", videoTrack);
-                        }
-                        remoteVideo.play().catch((err)=>{console.log("play failed again",err)});
-                    }
-                  
-                    const localStream=await navigator.mediaDevices.getUserMedia({
-                        video:true,
-                        audio:true
+           
+            await peer.setRemoteDescription(new RTCSessionDescription(data.offer)).then(()=>{
+                if(peer.remoteDescription){
+                    icecandidates.map( async(candidate)=>{
+                        await peer.addIceCandidate(new RTCIceCandidate(candidate));
+                        console.log("ice candidate added succesfully")
+                       
                     })
-                    for(const track of localStream.getTracks()){
-                        peer.addTrack(track,localStream);
-                    }
-                } else {
-                    console.warn("No stream found in track event.");
                 }
-            });
-            await peer.setRemoteDescription(new RTCSessionDescription(data.offer));
+                else{
+                    console.log("remote description not set properly");
+                }
+            }
+            );
             const answer=await peer.createAnswer();
             await peer.setLocalDescription(new RTCSessionDescription(answer));
-            if(peer.remoteDescription){
-                icecandidates.map( async(candidate)=>{
-                    await peer.addIceCandidate(new RTCIceCandidate(candidate));
-                    console.log("ice candidate added succesfully")
-                   
-                })
-            }
-            else{
-                console.log("remote description not set properly");
-            }
+           
             socket.emit("accepted",{answer:answer,to:data.from});
             console.log("Offer recieved from",data.from);
           
@@ -144,17 +148,21 @@ const [iceCandidatesToSend,setOutgoingCandidates]=useState([]);
                 console.warn("Unexpected answer received. Current state:", peer.signalingState);
                 return;
             }
-            await peer.setRemoteDescription(new RTCSessionDescription(data.answer));
-            if(peer.remoteDescription){
-                icecandidates.map( async(candidate)=>{
-                    await peer.addIceCandidate(new RTCIceCandidate(candidate));
-                    console.log("ice candidate added succesfully")
-                   
-                })
-            }
-            else{
-                console.log("remote description not set properly");
-            }
+            await peer.setRemoteDescription(new RTCSessionDescription(data.answer)).then(
+                ()=>{
+                    if(peer.remoteDescription){
+                        icecandidates.map( async(candidate)=>{
+                            await peer.addIceCandidate(new RTCIceCandidate(candidate));
+                            console.log("ice candidate added succesfully")
+                           
+                        })
+                    }
+                    else{
+                        console.log("remote description not set properly");
+                    }
+                }
+            );
+            
             console.log(peer.ontrack);
             
          })
