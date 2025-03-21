@@ -126,6 +126,7 @@ const [icecandidates,setIceCandidates]=useState([]);
          });
          socket.on("incomingAnswer",async(data)=>{
             console.log(data.answer);
+            console.log("answer recieved!!",answer);
             if (peer.signalingState !== "have-local-offer") {
                 console.warn("Unexpected answer received. Current state:", peer.signalingState);
                 return;
