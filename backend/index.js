@@ -36,7 +36,7 @@ io.on("connection",(socket)=>{
         console.log("offer sent")
     });
     socket.on("accepted",(data)=>{
-        io.to(data.to).emit("incomingAnswer",{answer:data.answer});
+        socket.to(data.to).emit("incomingAnswer",{answer:data.answer});
         console.log("answer sent");
         console.log(data.answer);
     })
