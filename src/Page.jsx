@@ -1,11 +1,12 @@
 import { useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState} from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "./ReduxStore";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
 
 import './Page.css';
+import { io } from "socket.io-client";
 import { useSocket } from "./socket/SocketProvider";
 const peer = new RTCPeerConnection({
     iceServers: [
@@ -193,7 +194,7 @@ peer.addEventListener("track", async (event) => {
             socket.off("object");
             socket.disconnect();
          }
-    },[user]);
+    },[user,socket]);
     useEffect(()=>{
         console.log(active_users);
     },[active_users]);

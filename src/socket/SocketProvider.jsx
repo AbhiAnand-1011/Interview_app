@@ -7,7 +7,7 @@ export const useSocket=()=>{
     return socket;
 }
 export const SocketProvider=(props)=>{
-const socket = useMemo(()=>{io("https://interview-app-7w2o.onrender.com",{
+const socket = useMemo(()=>{return io("https://interview-app-7w2o.onrender.com",{
     secure:true,
     withCredentials:true
 });
@@ -18,4 +18,3 @@ return(
     </SocketContext.Provider>
 )
 }
-export default socket;
