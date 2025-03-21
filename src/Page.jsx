@@ -186,15 +186,8 @@ peer.addEventListener("track", async (event) => {
                 console.error("Error adding ICE candidate:", error);
             }
         });
-         
-         return ()=>{
-            
-            socket.off("message");
-            socket.off("users");
-            socket.off("object");
-            socket.disconnect();
-         }
-    },[user,socket]);
+       
+    },[user]);
     useEffect(()=>{
         console.log(active_users);
     },[active_users]);
