@@ -22,12 +22,12 @@ const [self_id,setId]=useState("");
 const [onCall,setOnCall]=useState(false);
 const [remotePeerId,setRemoteId]=useState("");
 const [icecandidates,setIceCandidates]=useState([]);
-
+const [iceCandidatesToSend,setOutgoingCandidates]=useState([]);
     peer.addEventListener("icecandidate",(event)=>{
         if (event.candidate) {
-            console.log("Sending ICE candidate:", event.candidate);
+            
             console.log(remotePeerId);
-            socket.emit("ice-candidate", { candidate: event.candidate, to: remotePeerId });
+            setOutgoingCandidates([...iceCandidatesToSend,event.candidate]);
         }
     })
     peer.addEventListener("iceconnectionstatechange", () => {
@@ -37,7 +37,14 @@ const [icecandidates,setIceCandidates]=useState([]);
             console.error("ICE connection failed! Check STUN/TURN server.");
         }
     });
-
+    useEffect(()=>{
+        iceCandidatesToSend.map((candidate)=>{
+            console.log("sucessfully sent ice candidate to",remotePeerId);
+            console.log(candidate);
+            socket.emit("ice-candidate", { candidate:candidate, to: remotePeerId });
+        })
+      
+    },[remotePeerId])
     useEffect(()=>{
         if(!user){
             window.location.assign("/Signup");
