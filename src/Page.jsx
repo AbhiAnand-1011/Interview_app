@@ -22,14 +22,16 @@ const [localStream,setLocalStream]=useState(null);
 const [remoteStream,setRemoteStream]=useState(null);
 const socket=useSocket();
 const handleOffer=useCallback(async ({from,offer})=>{
-    console.log("offer recieved",offer);
+    console.log("offer recieved from"+from,offer);
     setRemoteId(from);
   const stream=await navigator.mediaDevices.getUserMedia({
     audio:true,
     video:true
   });
   const answer=await peer.getAnswer(offer);
+  
   socket.emit("accepted",{to:from,answer});
+  console.log("answer sent",answer);
   for(const track of localStream.getTracks()){
     peer.peer.addTrack(track,localStream);
     console.log("sent tracks");
@@ -52,6 +54,7 @@ const handleNego=useCallback(async()=>{
     const offer=await peer.getOffer();
     console.log("negotiation",offer);
     socket.emit("negotiation",{to:remotePeerId,offer});
+    console.log("negotiation offer sent to",remotePeerId);
 },[remotePeerId])
 const handleIncomingNego=useCallback(async(data)=>{
     

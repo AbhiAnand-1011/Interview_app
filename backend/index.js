@@ -33,7 +33,7 @@ io.on("connection",(socket)=>{
     socket.on("outgoing:call",(data)=>{
           
         socket.to(data.to).emit("incomingOffer",{from:socket.id,offer:data.offer})
-        console.log("offer sent")
+        console.log("offer sent ",data.offer)
     });
     socket.on("accepted",(data)=>{
         socket.to(data.to).emit("incomingAnswer",{answer:data.answer});
@@ -42,9 +42,11 @@ io.on("connection",(socket)=>{
     })
     socket.on("negotiation",(data)=>{
         socket.to(data.to).emit("negotiation",{from:socket.id,offer:data.offer});
+        console.log("negotiation offer sent",offer)
     })
     socket.on("nego-done",(data)=>{
         socket.to(data.to).emit("nego-final",{from:socket.id,offer:data.answer});
+        console.log("negotiation answer sent",answer);
     })
     socket.on("disconnect",()=>{
         
