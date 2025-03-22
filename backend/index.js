@@ -42,11 +42,11 @@ io.on("connection",(socket)=>{
     })
     socket.on("negotiation",(data)=>{
         socket.to(data.to).emit("negotiation",{from:socket.id,offer:data.offer});
-        console.log("negotiation offer sent",offer)
+        console.log("negotiation offer sent",data.offer)
     })
     socket.on("nego-done",(data)=>{
         socket.to(data.to).emit("nego-final",{from:socket.id,offer:data.answer});
-        console.log("negotiation answer sent",answer);
+        console.log("negotiation answer sent",data.answer);
     })
     socket.on("disconnect",()=>{
         
