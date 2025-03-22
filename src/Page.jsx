@@ -39,7 +39,7 @@ const handleOffer=useCallback(async ({from,offer})=>{
     peer.peer.addTrack(track,localStream);
     console.log("sent tracks");
    }
-},[localStream]);
+},[localStream,socket]);
 const handleAnswer=useCallback(async ({answer})=>{
     
    await peer.setRemoteDescription(answer);
@@ -58,14 +58,14 @@ const handleNego=useCallback(async()=>{
     console.log("negotiation",offer);
     socket.emit("negotiation",{to:remotePeerRef.current,offer});
     console.log("negotiation offer sent to",remotePeerRef.current);
-},[remotePeerRef])
+},[remotePeerRef,socket])
 const handleIncomingNego=useCallback(async(data)=>{
     
    const answer=await peer.getAnswer(data.offer);
    
    console.log("answer created for negotiation",answer);
    socket.emit("nego-done",{to:data.from,answer});
-},[])
+},[socket])
 const handleFinalNego=useCallback(async (data)=>{
     console.log("answer recieved for negotiation",data.answer);
     await peer.setRemoteDescription(data.answer);
@@ -122,7 +122,7 @@ const getUserMedia=useCallback(async()=>{
     socket.emit("outgoing:call",{to:id,offer});
     setLocalStream(stream);
     }
-},[])
+},[socket])
     const logOut=()=>{
          signOut(auth);
          dispatch(logout());
@@ -144,7 +144,7 @@ const getUserMedia=useCallback(async()=>{
                 
             </div>
             {localStream && <button onClick={sendStream}>send Stream</button>}
-            {  remoteStream && <ReactPlayer playing muted height="250px" width="250px" url={remoteStream}></ReactPlayer>}
+            {  remoteStream && <ReactPlayer playing height="250px" width="250px" url={remoteStream}></ReactPlayer>}
          {  localStream && <ReactPlayer playing muted height="250px" width="250px" url={localStream}></ReactPlayer>}
             <button onClick={createCall}>Create a meet</button>
             <button onClick={getUserMedia}>Join a meet</button>
