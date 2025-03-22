@@ -35,10 +35,7 @@ const handleOffer=useCallback(async ({from,offer})=>{
   
   socket.emit("accepted",{to:from,answer});
   console.log("answer sent",answer);
-  for(const track of localStream.getTracks()){
-    peer.peer.addTrack(track,localStream);
-    console.log("sent tracks");
-   }
+
 },[localStream,socket]);
 const handleAnswer=useCallback(async ({answer})=>{
     
