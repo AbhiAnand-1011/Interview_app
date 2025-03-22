@@ -22,35 +22,45 @@ const [localStream,setLocalStream]=useState(null);
 const [remoteStream,setRemoteStream]=useState(null);
 const socket=useSocket();
 const handleOffer=useCallback(async ({from,offer})=>{
+    console.log("offer recieved",offer);
     setRemoteId(from);
   const stream=await navigator.mediaDevices.getUserMedia({
     audio:true,
     video:true
   });
-  const answer=peer.getAnswer(offer);
+  const answer=await peer.getAnswer(offer);
   socket.emit("accepted",{to:from,answer});
   for(const track of localStream.getTracks()){
     peer.peer.addTrack(track,localStream);
+    console.log("sent tracks");
    }
 },[localStream]);
 const handleAnswer=useCallback(async ({answer})=>{
+    
    await peer.setRemoteDescription(answer);
+   console.log("recieved answer",answer);
    for(const track of localStream.getTracks()){
     peer.peer.addTrack(track,localStream);
+    console.log("sent tracks");
    }
 },[localStream])
 const handleId=useCallback((id)=>{
     setId(id);
 },[])
 const handleNego=useCallback(async()=>{
+    
     const offer=await peer.getOffer();
+    console.log("negotiation",offer);
     socket.emit("negotiation",{to:remotePeerId,offer});
 },[remotePeerId])
 const handleIncomingNego=useCallback(async(data)=>{
+    
    const answer=await peer.getAnswer(data.offer);
+   console.log("answer created for negotiation",answer);
    socket.emit("nego-done",{to:data.from,answer});
 },[])
 const handleFinalNego=useCallback(async (data)=>{
+    console.log("answer recieved for negotiation",data.answer);
     await peer.setRemoteDescription(data.answer);
 },[])
 useEffect(()=>{
@@ -62,6 +72,8 @@ useEffect(()=>{
 useEffect(()=>{
   peer.peer.addEventListener("track",async event=>{
     const stream=event.streams[0];
+    console.log("recived track",stream);
+    
     setRemoteStream(stream);
   })
 },[])
