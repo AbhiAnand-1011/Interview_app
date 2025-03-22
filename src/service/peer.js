@@ -30,7 +30,13 @@ class PeerService{
     }
     async setRemoteDescription(answer){
         if(this.peer){
+            console.log("setting answer",answer);
+            try{
             await this.peer.setRemoteDescription(new RTCSessionDescription(answer));
+            }
+            catch(error){
+                console.error(error);
+            }
         }
     }
 }

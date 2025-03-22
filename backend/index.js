@@ -45,7 +45,7 @@ io.on("connection",(socket)=>{
         console.log("negotiation offer sent",data.offer)
     })
     socket.on("nego-done",(data)=>{
-        socket.to(data.to).emit("nego-final",{from:socket.id,offer:data.answer});
+        socket.to(data.to).emit("nego-final",{from:socket.id,answer:data.answer});
         console.log("negotiation answer sent",data.answer);
     })
     socket.on("disconnect",()=>{

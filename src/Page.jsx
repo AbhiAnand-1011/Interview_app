@@ -66,8 +66,8 @@ const handleIncomingNego=useCallback(async(data)=>{
    socket.emit("nego-done",{to:data.from,answer});
 },[])
 const handleFinalNego=useCallback(async (data)=>{
-    console.log("answer recieved for negotiation",data);
-    await peer.setRemoteDescription(data);
+    console.log("answer recieved for negotiation",data.answer);
+    await peer.setRemoteDescription(data.answer);
 },[])
 useEffect(()=>{console.log("remote peer id is",remotePeerId)},[remotePeerId])
 useEffect(()=>{
