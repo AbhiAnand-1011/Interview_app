@@ -56,15 +56,13 @@ const handleNego=useCallback(async()=>{
     
     const offer=await peer.getOffer();
     console.log("negotiation",offer);
-    peer.peer.setLocalDescription(new RTCSessionDescription(offer));
     socket.emit("negotiation",{to:remotePeerRef.current,offer});
     console.log("negotiation offer sent to",remotePeerRef.current);
 },[remotePeerRef])
 const handleIncomingNego=useCallback(async(data)=>{
     
    const answer=await peer.getAnswer(data.offer);
-   peer.peer.setLocalDescription(new RTCSessionDescription(answer));
-   peer.peer.setRemoteDescription(new RTCSessionDescription(data.offer));
+   
    console.log("answer created for negotiation",answer);
    socket.emit("nego-done",{to:data.from,answer});
 },[])
