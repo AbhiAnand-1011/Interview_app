@@ -9,7 +9,7 @@ import { logout } from "./ReduxStore";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
 import peer from "./service/peer";
-import './Page.css';
+
 import { useSocket } from "./socket/SocketProvider";
 import ReactPlayer from "react-player";
 const MODAL_TYPES = {
