@@ -150,7 +150,7 @@ const signInWithGoogle = async () => {
                 <Button onClick={signInWithGoogle} variant="outlined" fullWidth startIcon={<FcGoogle />} size="large" className="google-button">
                   Sign Up with Google
                 </Button>
-                <span>Already Have an account?<a href="/login">Login</a></span>
+                <span>Already Have an account? <a href="/login" className="text-bule-600 underline">Login</a></span>
               </CardActions>
               
             </form>

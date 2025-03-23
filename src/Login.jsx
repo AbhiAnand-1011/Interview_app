@@ -134,7 +134,7 @@ export default function Login() {
                 <Button onClick={signInWithGoogle} variant="outlined" fullWidth startIcon={<FcGoogle />} size="large" className="google-button">
                   Login with Google
                 </Button>
-                <span>Don't have an account?<a href="/Signup">Signup</a></span>
+                <span>Don't have an account? <a href="/Signup" className="text-bule-600 underline">Signup</a></span>
               </CardActions>
             </form>
           </CardContent>

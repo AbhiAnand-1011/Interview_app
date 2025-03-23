@@ -132,12 +132,12 @@ const socket=useSocket();
      setLocalStream(stream);
      }
  },[socket])
-     const logOut=()=>{
+     const logOut=useCallback(()=>{
           signOut(auth);
           dispatch(logout());
  
           window.location.assign("/Signup");
-     }
+     },[]);
      const sendStream=useCallback(()=>{
          for(const track of localStream.getTracks()){
              peer.peer.addTrack(track,localStream);
@@ -145,13 +145,13 @@ const socket=useSocket();
      },[localStream]);
     return (
      <div className="flex flex-col min-h-screen bg-black">
-        <NAV_bar/>
+        <NAV_bar LogOut={logOut}/>
         <div className="text-center mt-10 space-y-8">
         
         <h1 className="text-6xl font-bold text-cyan-500">WELCOME BACK</h1>
         <p className="text-gray-500 text-lg text-gray-100">MANAGE YOUR INTERVIEWS AND REVIEW CANDIDATES EFFECTIVELY</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 w-full max-w-3xl mx-auto justify-center mt-20">
-        {actionCards.map((card, index) => (
+     {!localStream &&   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 w-full max-w-3xl mx-auto justify-center mt-20">
+         { actionCards.map((card, index) => (
           <div key={index} className={`p-6 rounded-lg text-center shadow-lg flex flex-col items-center space-y-5 transition-transform transform hover:scale-105 ${
             index === 0
               ? "bg-gradient-to-br from-green-900 to-gray-900"
@@ -172,10 +172,13 @@ const socket=useSocket();
             <p className="text-gray-400 text-sm">{card.description}</p>
           </div>
         ))}
-         {localStream && <button onClick={sendStream}>send Stream</button>}
-         {  remoteStream && <ReactPlayer playing height="250px" width="250px" url={remoteStream}></ReactPlayer>}
-        {  localStream && <ReactPlayer playing muted height="250px" width="250px" url={localStream}></ReactPlayer>}
-       </div>
+         </div>}
+         <div>{localStream && <button className="px-6 py-1 bg-green-800 rounded-lg text-white hover:bg-green-900" onClick={sendStream}>send Stream</button>}</div>
+         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 w-full max-w-3xl mx-auto justify-center mt-20">
+        <div>{  remoteStream && <ReactPlayer playing height="250px" width="250px" url={remoteStream}></ReactPlayer>}</div>
+       <div> {  localStream && <ReactPlayer playing muted height="250px" width="250px" url={localStream}></ReactPlayer>}</div> 
+        </div>
+      
        </div> 
        {showModal && modalType === MODAL_TYPES.JOIN_INTERVIEW && (
         <JoinInterviewModal sendOffer={getUserMedia} callBack={IdsetCallback} onClose={() => setShowModal(false)} />
