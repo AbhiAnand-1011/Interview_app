@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "./ReduxStore";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
+import Loading from "./components/Loading";
 import peer from "./service/peer";
 
 import { useSocket } from "./socket/SocketProvider";
@@ -80,6 +81,7 @@ const socket=useSocket();
      console.log("answer recieved for negotiation",data.answer);
      await peer.setRemoteDescription(data.answer);
  },[])
+ useEffect(()=>{setUserData(user)},[user]);
  useEffect(()=>{console.log("remote peer id is",remotePeerId)},[remotePeerId])
  useEffect(()=>{
      peer.peer.addEventListener("negotiationneeded",handleNego);
@@ -144,6 +146,8 @@ const socket=useSocket();
             }
      },[localStream]);
     return (
+        <>
+        {userData? (
      <div className="flex flex-col min-h-screen bg-black">
         <NAV_bar LogOut={logOut}/>
         <div className="text-center mt-10 space-y-8">
@@ -187,6 +191,8 @@ const socket=useSocket();
         <NewCallModal makeCall={createCall} onClose={() => setShowModal(false)} />
       )}
     </div>
+        ):(<><Loading/></>)}
+    </>
     );
 };
 
