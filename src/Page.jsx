@@ -41,6 +41,8 @@ const handleAnswer=useCallback(async ({answer})=>{
     
    await peer.setRemoteDescription(answer);
    console.log("recieved answer",answer);
+   socket.emit("connection-made",{to:remotePeerRef.current});
+   console.log("established message sent to",remotePeerRef.current)
    for(const track of localStream.getTracks()){
     peer.peer.addTrack(track,localStream);
     console.log("sent tracks");
@@ -96,12 +98,14 @@ useEffect(()=>{
          socket.on("incomingAnswer",handleAnswer);
          socket.on("negotiation",handleIncomingNego);
          socket.on("nego-final",handleFinalNego)
+         socket.on("connection-made",sendStream);
     return ()=>{
         socket.off("incomingOffer",handleOffer)
         socket.off("client_id",handleId);
         socket.off("incomingAnswer",handleAnswer);
         socket.off("negotiation",handleIncomingNego);
         socket.off("nego-final",handleFinalNego);
+        socket.off("connection-made",sendStream);
     }
 },[socket,handleOffer,handleId,handleAnswer,handleIncomingNego,handleFinalNego]);
 
