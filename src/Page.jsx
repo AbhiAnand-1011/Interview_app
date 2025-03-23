@@ -6,7 +6,6 @@ import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
 import peer from "./service/peer";
 import './Page.css';
-import { io } from "socket.io-client";
 import { useSocket } from "./socket/SocketProvider";
 import ReactPlayer from "react-player";
 
