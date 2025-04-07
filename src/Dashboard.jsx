@@ -83,6 +83,7 @@ const socket=useSocket();
      await peer.setRemoteDescription(data.answer);
  },[])
  const handleTextMessage=useCallback((data)=>{
+    setDocument(data.text);
     console.log(data.text);
     
  },[])
