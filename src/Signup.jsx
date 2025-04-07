@@ -35,7 +35,7 @@ export default function Signup() {
               }
             )
           }
-        )
+        ) 
         .then(data=>data.json())
         .then(console.log(data));
    })

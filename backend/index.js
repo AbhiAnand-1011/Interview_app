@@ -48,6 +48,9 @@ io.on("connection",(socket)=>{
         socket.to(data.to).emit("nego-final",{from:socket.id,answer:data.answer});
         console.log("negotiation answer sent",data.answer);
     })
+    socket.on("text-message",(data)=>{
+        socket.to(data.to).emit("text-message",{from:socket.id,text:data.text});
+    })
     socket.on("disconnect",()=>{
         
         users=users.filter((id)=>{
