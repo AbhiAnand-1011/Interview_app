@@ -83,7 +83,8 @@ const socket=useSocket();
      await peer.setRemoteDescription(data.answer);
  },[])
  const handleTextMessage=useCallback((data)=>{
-    setDocument(data.text);
+    console.log(data.text);
+    
  },[])
  useEffect(()=>{setUserData(user)},[user]);
  useEffect(()=>{console.log("remote peer id is",remotePeerId)},[remotePeerId])
@@ -99,6 +100,7 @@ const socket=useSocket();
      console.log("recived track",stream);
      
      setRemoteStream(stream);
+     
    })
  },[])
  useEffect(()=>{

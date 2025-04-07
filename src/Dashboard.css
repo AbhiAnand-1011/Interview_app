@@ -5,5 +5,6 @@ textarea {
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
