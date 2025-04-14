@@ -13,6 +13,7 @@ import peer from "./service/peer";
 import './Dashboard.css';
 import { useSocket } from "./socket/SocketProvider";
 import ReactPlayer from "react-player";
+import DrawingCanvas from "./components/DrawingCanvas";
 const MODAL_TYPES = {
     NEW_CALL: "newCall",
     JOIN_INTERVIEW: "joinInterview",
@@ -208,6 +209,12 @@ const socket=useSocket();
                 rows="20"
                 cols="80"
             />}</div>
+            {remoteStream && 
+            <DrawingCanvas socket={socket} remotePeerRef={remotePeerRef}>
+              
+            </DrawingCanvas>
+
+            }
         </div>
       
        </div> 
