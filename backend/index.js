@@ -51,6 +51,13 @@ io.on("connection",(socket)=>{
     socket.on("text-message",(data)=>{
         socket.to(data.to).emit("text-message",{from:socket.id,text:data.text});
     })
+    socket.on("draw-data", (data) => {
+        socket.to(data.to).emit("draw-data", {
+          from: socket.id,
+          draw: data.draw
+        });
+      });
+      
     socket.on("disconnect",()=>{
         
         users=users.filter((id)=>{
