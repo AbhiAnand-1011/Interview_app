@@ -10,15 +10,17 @@ import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
 import Loading from "./components/Loading";
 import peer from "./service/peer";
-
+import './Dashboard.css';
 import { useSocket } from "./socket/SocketProvider";
 import ReactPlayer from "react-player";
+import DrawingCanvas from "./components/DrawingCanvas";
 const MODAL_TYPES = {
     NEW_CALL: "newCall",
     JOIN_INTERVIEW: "joinInterview",
   };
   
 const Dashboard = ()=>{
+   const [document,setDocument]=useState("");
    const [showModal,setShowModal]=useState(false);
    const [modalType, setModalType] = useState(null);
    const user=useSelector((state)=>state.user.data);
@@ -81,6 +83,11 @@ const socket=useSocket();
      console.log("answer recieved for negotiation",data.answer);
      await peer.setRemoteDescription(data.answer);
  },[])
+ const handleTextMessage=useCallback((data)=>{
+    setDocument(data.text);
+    console.log(data.text);
+    
+ },[])
  useEffect(()=>{setUserData(user)},[user]);
  useEffect(()=>{console.log("remote peer id is",remotePeerId)},[remotePeerId])
  useEffect(()=>{
@@ -95,8 +102,15 @@ const socket=useSocket();
      console.log("recived track",stream);
      
      setRemoteStream(stream);
+     
    })
  },[])
+ useEffect(()=>{
+   socket.on("text-message",handleTextMessage);
+   return ()=>{
+    socket.off("text-message",handleTextMessage);
+   }
+ },[socket,handleTextMessage])
      useEffect(()=>{
          if(!user){
              window.location.assign("/Signup");
@@ -140,6 +154,14 @@ const socket=useSocket();
  
           window.location.assign("/Signup");
      },[]);
+     const handleChange = (e) => {
+      const newDocument = e.target.value;
+      setDocument(newDocument);
+      socket.emit("text-message",{
+        to:remotePeerRef.current,
+        text:document
+      })
+  };
      const sendStream=useCallback(()=>{
          for(const track of localStream.getTracks()){
              peer.peer.addTrack(track,localStream);
@@ -181,6 +203,18 @@ const socket=useSocket();
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 w-full max-w-3xl mx-auto justify-center mt-20">
         <div>{  remoteStream && <ReactPlayer playing height="250px" width="250px" url={remoteStream}></ReactPlayer>}</div>
        <div> {  localStream && <ReactPlayer playing muted height="250px" width="250px" url={localStream}></ReactPlayer>}</div> 
+       <div>{remoteStream &&  <textarea
+                value={document}
+                onChange={handleChange}
+                rows="20"
+                cols="80"
+            />}</div>
+            {remoteStream && 
+            <DrawingCanvas socket={socket} remotePeerRef={remotePeerRef}>
+              
+            </DrawingCanvas>
+
+            }
         </div>
       
        </div> 
