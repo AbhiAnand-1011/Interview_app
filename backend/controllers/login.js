@@ -6,7 +6,7 @@ const Login=async(req,res)=>{
     const userData=req.body;
     client.query('SELECT * FROM users WHERE email=$1',[userData.email],async(error,result)=>{
         if(!error){
-            if(!result.rows[0].password){
+            if(!result){
                 res.json({
                     status:'ERR'
                 });
