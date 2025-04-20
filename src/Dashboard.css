@@ -1,10 +1,138 @@
-textarea {
-    width: 80%;
-    height: 80%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: black;
+  color: white;
+}
+
+.welcome-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.welcome-title {
+  font-size: 3rem;
+  color: #22d3ee;
+  font-weight: bold;
+}
+
+.welcome-subtitle {
+  color: #e5e7eb;
+  font-size: 1.25rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 800px;
+  margin: 4rem auto;
+  gap: 2rem; /* Slightly more gap for visual comfort */
+}
+
+.card {
+  padding: 2rem; /* Increased padding */
+  min-height: 220px; /* Ensures the card has presence */
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card.green {
+  background: linear-gradient(to bottom right, #064e3b, #111827);
+}
+
+.card.purple {
+  background: linear-gradient(to bottom right, #4c1d95, #111827);
+}
+
+.card-icon {
+  width: 56px;
+  height: 56px;
+  color: #34d399;
+}
+
+.card-title {
+  font-size: 1.5rem; /* Bolder title */
+  font-weight: 600;
+  margin-top: 1rem;
+  color: white;
+}
+
+.card-description {
+  color: #d1d5db;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 0.5rem;
+  padding: 0 1rem;
+}
+
+.send-stream-btn {
+  background-color: #065f46;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  margin: 1rem auto;
+  display: block;
+  cursor: pointer;
+  border: none;
+}
+
+.send-stream-btn:hover {
+  background-color: #047857;
+}
+
+.main-section {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.left-pane {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  gap: 1rem;
+}
+
+.video-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.drawing-canvas-wrapper {
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  height: 300px;
+  overflow: hidden;
+}
+
+.right-pane {
+  width: 50%;
+  padding: 1rem;
+}
+
+.code-textarea {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: none;
+  background: white;
+  color: black;
+}

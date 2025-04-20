@@ -170,61 +170,77 @@ const socket=useSocket();
     return (
         <>
         {userData? (
-     <div className="flex flex-col min-h-screen bg-black">
-        <NAV_bar LogOut={logOut}/>
-        <div className="text-center mt-10 space-y-8">
-        
-        <h1 className="text-6xl font-bold text-cyan-500">WELCOME BACK</h1>
-        <p className="text-gray-500 text-lg text-gray-100">MANAGE YOUR INTERVIEWS AND REVIEW CANDIDATES EFFECTIVELY</p>
-     {!localStream &&   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 w-full max-w-3xl mx-auto justify-center mt-20">
-         { actionCards.map((card, index) => (
-          <div key={index} className={`p-6 rounded-lg text-center shadow-lg flex flex-col items-center space-y-5 transition-transform transform hover:scale-105 ${
-            index === 0
-              ? "bg-gradient-to-br from-green-900 to-gray-900"
-              : "bg-gradient-to-br from-purple-900 to-gray-900"
-          }`}
-          onClick={()=>{
-            if (index === 0) {
-                setModalType(MODAL_TYPES.NEW_CALL);
-                setShowModal(true);
-              } else if (index === 1) {
-                setModalType(MODAL_TYPES.JOIN_INTERVIEW);
-                setShowModal(true);
-              }
-          }}
-          >
-            <card.icon className="w-12 h-12 text-green-400" />
-            <div className="text-xl font-bold text-white">{card.title}</div>
-            <p className="text-gray-400 text-sm">{card.description}</p>
-          </div>
-        ))}
-         </div>}
-         <div>{localStream && <button className="px-6 py-1 bg-green-800 rounded-lg text-white hover:bg-green-900" onClick={sendStream}>send Stream</button>}</div>
-         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 w-full max-w-3xl mx-auto justify-center mt-20">
-        <div>{  remoteStream && <ReactPlayer playing height="250px" width="250px" url={remoteStream}></ReactPlayer>}</div>
-       <div> {  localStream && <ReactPlayer playing muted height="250px" width="250px" url={localStream}></ReactPlayer>}</div> 
-       <div>{remoteStream &&  <textarea
-                value={document}
-                onChange={handleChange}
-                rows="20"
-                cols="80"
-            />}</div>
-            {remoteStream && 
-            <DrawingCanvas socket={socket} remotePeerRef={remotePeerRef}>
-              
-            </DrawingCanvas>
-
-            }
-        </div>
-      
-       </div> 
-       {showModal && modalType === MODAL_TYPES.JOIN_INTERVIEW && (
-        <JoinInterviewModal sendOffer={getUserMedia} callBack={IdsetCallback} onClose={() => setShowModal(false)} />
-      )}
-      {showModal && modalType === MODAL_TYPES.NEW_CALL && (
-        <NewCallModal makeCall={createCall} onClose={() => setShowModal(false)} />
-      )}
-    </div>
+     <div className="dashboard-container">
+     <NAV_bar LogOut={logOut} />
+   
+     { !localStream && (
+       <div className="welcome-section">
+         <h1 className="welcome-title">WELCOME BACK</h1>
+         <p className="welcome-subtitle">MANAGE YOUR INTERVIEWS AND REVIEW CANDIDATES EFFECTIVELY</p>
+       </div>
+     )}
+   
+     { !localStream && (
+       <div className="card-grid">
+         {actionCards.map((card, index) => (
+           <div
+             key={index}
+             className={`card ${index === 0 ? 'green' : 'purple'}`}
+             onClick={() => {
+               if (index === 0) {
+                 setModalType(MODAL_TYPES.NEW_CALL);
+                 setShowModal(true);
+               } else {
+                 setModalType(MODAL_TYPES.JOIN_INTERVIEW);
+                 setShowModal(true);
+               }
+             }}
+           >
+             <card.icon className="card-icon" />
+             <div className="card-title">{card.title}</div>
+             <p className="card-description">{card.description}</p>
+           </div>
+         ))}
+       </div>
+     )}
+   
+     {localStream && (
+       <button className="send-stream-btn" onClick={sendStream}>Send Stream</button>
+     )}
+   
+     {localStream && (
+       <div className="main-section">
+         <div className="left-pane">
+           <div className="video-container">
+             {remoteStream && <ReactPlayer playing height="150px" width="250px" url={remoteStream} />}
+             {localStream && <ReactPlayer playing muted height="150px" width="250px" url={localStream} />}
+           </div>
+           <div className="drawing-canvas-wrapper">
+             {remoteStream && <DrawingCanvas socket={socket} remotePeerRef={remotePeerRef} />}
+           </div>
+         </div>
+   
+         <div className="right-pane">
+           {remoteStream && (
+             <textarea
+               value={document}
+               onChange={handleChange}
+               rows="20"
+               cols="80"
+               className="code-textarea"
+             />
+           )}
+         </div>
+       </div>
+     )}
+   
+     {showModal && modalType === MODAL_TYPES.JOIN_INTERVIEW && (
+       <JoinInterviewModal sendOffer={getUserMedia} callBack={IdsetCallback} onClose={() => setShowModal(false)} />
+     )}
+     {showModal && modalType === MODAL_TYPES.NEW_CALL && (
+       <NewCallModal makeCall={createCall} onClose={() => setShowModal(false)} />
+     )}
+   </div>
         ):(<><Loading/></>)}
     </>
     );
