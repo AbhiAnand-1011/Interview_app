@@ -12,7 +12,15 @@ const DrawingCanvas = ({ socket, remotePeerRef }) => {
     ctx.lineWidth = lineWidth;
     ctx.beginPath();
     ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    const x=e.nativeEvent.offsetX;
+    const y=e.nativeEvent.offsetY;
     setDrawing(true);
+    socket.emit("start-drawing",{
+      to:remotePeerRef.current,
+      draw:{
+         x,y
+      }
+    })
   };
 
   const draw = (e) => {
@@ -41,19 +49,28 @@ const DrawingCanvas = ({ socket, remotePeerRef }) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    socket.emit("clear-canvas",{to:remotePeerRef.current});
   };
   useEffect(() => {
     const ctx = canvasRef.current.getContext("2d");
-
+    socket.on("start-drawing",({draw})=>{
+      ctx.beginPath();
+      ctx.moveTo(draw.x, draw.y);
+    })
     socket.on("draw-data", ({ draw }) => {
       ctx.strokeStyle = draw.color;
       ctx.lineWidth = draw.lineWidth;
       ctx.lineTo(draw.x, draw.y);
       ctx.stroke();
     });
-
+    socket.on("clear-canvas",()=>{
+      const canvas = canvasRef.current;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    })
     return () => {
+      socket.off("start-drawing");
       socket.off("draw-data");
+      socket.off("clear-canvas");
     };
   }, [socket]);
 

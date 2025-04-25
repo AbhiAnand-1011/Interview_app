@@ -57,7 +57,14 @@ io.on("connection",(socket)=>{
           draw: data.draw
         });
       });
-      
+    socket.on("start-drawing",(data)=>{
+        socket.to(data.to).emit("start-drawing",{
+            draw:data.draw
+        })
+    })
+    socket.on("clear-canvas",(data)=>{
+        socket.to(data.to).emit("clear-canvas");
+    })
     socket.on("disconnect",()=>{
         
         users=users.filter((id)=>{
