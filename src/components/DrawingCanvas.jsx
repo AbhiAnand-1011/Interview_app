@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-
+import './DrawingCanvas.css';
 const DrawingCanvas = ({ socket, remotePeerRef }) => {
   const canvasRef = useRef(null);
   const [drawing, setDrawing] = useState(false);
@@ -75,7 +75,7 @@ const DrawingCanvas = ({ socket, remotePeerRef }) => {
   }, [socket]);
 
   return (
-    <div className="flex flex-col items-center p-4 space-y-4">
+    <div className="flex flex-col items-center p-4 space-y-4  scribble-pad">
       <div className="flex space-x-2">
         <input
           type="color"

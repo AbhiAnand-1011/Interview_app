@@ -212,8 +212,8 @@ const socket=useSocket();
        <div className="main-section">
          <div className="left-pane">
            <div className="video-container">
-             {remoteStream && <ReactPlayer playing height="150px" width="250px" url={remoteStream} />}
-             {localStream && <ReactPlayer playing muted height="150px" width="250px" url={localStream} />}
+             {remoteStream && <ReactPlayer className="stream" playing height="150px" width="250px" url={remoteStream} />}
+             {localStream && <ReactPlayer className="stream" playing muted height="150px" width="250px" url={localStream} />}
            </div>
            <div className="drawing-canvas-wrapper">
              {remoteStream && <DrawingCanvas socket={socket} remotePeerRef={remotePeerRef} />}
