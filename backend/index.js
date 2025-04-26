@@ -6,18 +6,79 @@ const cookieParser=require('cookie-parser');
 const registerRoutes=require('./routes/register');
 const LoginRoute=require('./routes/login');
 const app=express();
+
+const server=require('http').createServer(app);
+
+const io=require('socket.io')(server,{
+    cors:{
+        origin:["https://interview-webapp.netlify.app","http://localhost:5173"],
+        methods:["GET","POST"],
+        credentials:true
+    }
+});
 const dotenv=require('dotenv');
 dotenv.config();
 app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true
+    origin:["https://interview-webapp.netlify.app","http://localhost:5173"],
+    credentials:true,
+    methods:["GET","POST"]
 }));
-//app.use(express.urlencoded({extended:true}))
+let users=[];
+io.on("connection",(socket)=>{
+   
+    console.log(socket.id);
+    users.push(socket.id);
+    socket.emit("client_id",socket.id);
+    socket.broadcast.emit("users",users);
+    socket.on("outgoing:call",(data)=>{
+          
+        socket.to(data.to).emit("incomingOffer",{from:socket.id,offer:data.offer})
+        console.log("offer sent ",data.offer)
+    });
+    socket.on("accepted",(data)=>{
+        socket.to(data.to).emit("incomingAnswer",{answer:data.answer});
+        console.log("answer sent");
+        console.log(data.answer);
+    })
+    socket.on("negotiation",(data)=>{
+        socket.to(data.to).emit("negotiation",{from:socket.id,offer:data.offer});
+        console.log("negotiation offer sent",data.offer)
+    })
+    socket.on("nego-done",(data)=>{
+        socket.to(data.to).emit("nego-final",{from:socket.id,answer:data.answer});
+        console.log("negotiation answer sent",data.answer);
+    })
+    socket.on("text-message",(data)=>{
+        socket.to(data.to).emit("text-message",{from:socket.id,text:data.text});
+    })
+    socket.on("draw-data", (data) => {
+        socket.to(data.to).emit("draw-data", {
+          from: socket.id,
+          draw: data.draw
+        });
+      });
+    socket.on("start-drawing",(data)=>{
+        socket.to(data.to).emit("start-drawing",{
+            draw:data.draw
+        })
+    })
+    socket.on("clear-canvas",(data)=>{
+        socket.to(data.to).emit("clear-canvas");
+    })
+    socket.on("disconnect",()=>{
+        
+        users=users.filter((id)=>{
+               id!=socket.id;
+               
+        })
+        socket.broadcast.emit("users",users);
+    })
+})
 app.use(express.json());
 app.use(cookieParser());
 app.use('/auth',registerRoutes);
 app.use('/login',LoginRoute)
-app.listen(8080);
+server.listen(process.env.PORT || 8080);
 
 
 

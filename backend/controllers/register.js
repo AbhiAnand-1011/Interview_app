@@ -28,7 +28,7 @@ const Register=async(req,res)=>{
             console.log(token);
             res.cookie("token",token,{
                 httpOnly:true,
-                secure:false,
+                secure:true,
                 sameSite:"none"
             });
             res.json({

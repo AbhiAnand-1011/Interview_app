@@ -22,7 +22,7 @@ export default function Signup() {
           email: currentUser.email,
           photo: currentUser.photoURL
         }));
-        fetch('http://localhost:8080/auth/firebase',
+        fetch('https://interview-app-7w2o.onrender.com/auth/firebase',
           {
             method:"POST",
             credentials:"include",
@@ -35,7 +35,7 @@ export default function Signup() {
               }
             )
           }
-        )
+        ) 
         .then(data=>data.json())
         .then(console.log(data));
    })
@@ -69,7 +69,7 @@ const signInWithGoogle = async () => {
     e.preventDefault();
    
     if (validate()) {
-      fetch('http://localhost:8080/auth/local',
+      fetch('https://interview-app-7w2o.onrender.com/auth/local',
         {
         method:"POST",
         credentials:"include",
@@ -150,7 +150,7 @@ const signInWithGoogle = async () => {
                 <Button onClick={signInWithGoogle} variant="outlined" fullWidth startIcon={<FcGoogle />} size="large" className="google-button">
                   Sign Up with Google
                 </Button>
-                <span>Already Have an account?<a href="/login">Login</a></span>
+                <span>Already Have an account? <a href="/login" className="text-bule-600 underline">Login</a></span>
               </CardActions>
               
             </form>
