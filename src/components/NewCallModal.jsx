@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { X } from 'lucide-react';
 
-function NewCallModal({onClose}) {
+function NewCallModal({makeCall,onClose}) {
+    const startMeet=useCallback(async()=>{
+        await makeCall();
+        onClose();
+    })
   return (
     
     <div className='fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
@@ -13,7 +17,7 @@ function NewCallModal({onClose}) {
             <div className='mt-3 flex justify-end space-x-2'>
                 <button className="px-5 py-1 bg-gray-700 rounded-lg text-gray-300 hover:bg-gray-600">Cancel</button>
                
-                <button className="px-6 py-1 bg-green-800 rounded-lg text-white hover:bg-green-900">Start Meeting</button>
+                <button className="px-6 py-1 bg-green-800 rounded-lg text-white hover:bg-green-900" onClick={startMeet}>Start Meeting</button>
                 
             </div> 
       </div>
