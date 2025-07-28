@@ -73,6 +73,7 @@ io.on("connection",(socket)=>{
         })
         socket.broadcast.emit("users",users);
     })
+    console.log("hi");
 })
 app.use(express.json());
 app.use(cookieParser());
